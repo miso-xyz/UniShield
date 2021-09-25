@@ -1,5 +1,5 @@
 # UniShield
-Full Deobfuscator for <a href="https://github.com/AhmedMinegames/NetShield_Protector">NetShield Protector</a>
+Deobfuscator for <a href="https://github.com/AhmedMinegames/NetShield_Protector">NetShield Protector</a>
 
 # Notes
 All 3 Licensing Protections use encryption, UniShield only extract the encrypted data & tries to decrypt with what's available.</br>(they're stupid protections anyway)</br>
