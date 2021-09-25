@@ -46,6 +46,7 @@ namespace UniShield
         public MethodRef Encoding_GetBytes = new MethodRef("System.Text", "Encoding", "GetBytes");
         public ClassRef HMACSHA256_HashGen = new ClassRef("System.Security.Cryptography", "HMACSHA256");
         public ClassRef SHA256_CryptoService = new ClassRef("System.Security.Cryptography", "SHA256CryptoServiceProvider");
+        public ClassRef SupressIldasmAttribute = new ClassRef("System.Runtime.CompilerServices", "SuppressIldasmAttribute");
 
         public void Read(string path)
         {
@@ -71,6 +72,9 @@ namespace UniShield
                         break;
                     case "SHA256_CryptoService":
                         SHA256_CryptoService = (ClassRef)Utils.FormatCall(p2);
+                        break;
+                    case "SupressIldasmAttribute":
+                        SupressIldasmAttribute = (ClassRef)Utils.FormatCall(p2);
                         break;
                 }
             }

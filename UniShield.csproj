@@ -56,8 +56,11 @@
     <Compile Include="Config.cs" />
     <Compile Include="Protections\AntiDe4dot.cs" />
     <Compile Include="Protections\Base64.cs" />
+    <Compile Include="Protections\CFlow %28v1.2%29 - Scrapped.cs" />
     <Compile Include="Protections\CFlow.cs" />
     <Compile Include="Protections\FakeAttribs.cs" />
+    <Compile Include="Protections\ILDasm.cs" />
+    <Compile Include="Protections\IntConfusion.cs" />
     <Compile Include="Rendering\AsciiImage.cs" />
     <Compile Include="Rendering\FileBrowser.cs" />
     <Compile Include="Presets.cs" />

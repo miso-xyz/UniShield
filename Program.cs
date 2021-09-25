@@ -167,6 +167,12 @@ namespace UniShield
                 AddToLog("");
                 //AddToLog("Now Renaming Methods...", ConsoleColor.Yellow);
                 //Renaming.Fix();
+                if (config.Prot_ILDasm)
+                {
+                    AddToLog("Now Removing ILDasm...", ConsoleColor.Yellow);
+                    ILDasm.Fix();
+                    AddToLog("");
+                }
                 if (config.Prot_Base64Strings)
                 {
                     AddToLog("Now Decoding Base64 Strings...", ConsoleColor.Yellow);
@@ -183,6 +189,12 @@ namespace UniShield
                 {
                     AddToLog("Now Removing Fake Attributes...", ConsoleColor.Yellow);
                     FakeAttribs.Fix();
+                    AddToLog("");
+                }
+                if (config.Prot_IntConf)
+                {
+                    AddToLog("Now Fixing Int Confusion...", ConsoleColor.Yellow);
+                    IntConfusion.Fix();
                     AddToLog("");
                 }
                 if (config.Prot_CFlow)

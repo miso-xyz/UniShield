@@ -9,7 +9,8 @@ namespace UniShield.Protections
 {
     class CFlow
     {
-        /* From DevT02's Junk Remover*/ class NopCleaning 
+        /* From DevT02's Junk Remover*/
+        class NopCleaning
         {
             public static void RemoveUselessNops(MethodDef method)
             {

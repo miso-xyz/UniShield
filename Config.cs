@@ -19,6 +19,9 @@ namespace UniShield
         public bool Prot_JunkMethods = true;
         public bool Prot_CFlow = true;
         public bool Prot_Base64Strings = true;
+        public bool Prot_ILDasm = true;
+        public bool Prot_IntConf = true;
+
         public void Read(string path)
         {
             string[] fileData = File.ReadAllLines(path);
@@ -58,6 +61,12 @@ namespace UniShield
                         break;
                     case "CFlow":
                         Prot_CFlow = Convert.ToBoolean(int.Parse(p2));
+                        break;
+                    case "ILDasm":
+                        Prot_ILDasm = Convert.ToBoolean(int.Parse(p2));
+                        break;
+                    case "IntConfusion":
+                        Prot_IntConf = Convert.ToBoolean(int.Parse(p2));
                         break;
                 }
             }

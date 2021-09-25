@@ -59,5 +59,16 @@ namespace UniShield.Helpers
             foreach (Instruction inst in method.Body.Instructions) { if (inst.OpCode.Equals(OpCodes.Ldstr)) { strList.Add(inst.Operand.ToString()); } }
             return strList.ToArray();
         }
+
+        public static Instruction SimplifyBR(Instruction brInst)
+        {
+            Instruction inst = (Instruction)brInst;
+            while (true)
+            {
+                if (inst.OpCode.Equals(OpCodes.Br) || inst.OpCode.Equals(OpCodes.Br_S)) { inst = (Instruction)inst; }
+                else { break; }
+            }
+            return inst;
+        }
     }
 }
