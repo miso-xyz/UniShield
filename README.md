@@ -3,6 +3,9 @@ Deobfuscator for <a href="https://github.com/AhmedMinegames/NetShield_Protector"
 
 # Notes
 All 3 Licensing Protections use encryption, UniShield only extract the encrypted data & tries to decrypt with what's available.</br>(they're stupid protections anyway)</br>
+
+Some protections that NetShield Uses are from <a href="https://github.com/Sato-Isolated/MindLated/">MindLated</a>.</br>
+If for some reason UniShield doesn't support a protection, try <a href="https://github.com/miso-xyz/LostMyMisoSoup">LostMyMisoSoup</a> instead
 - - - -
 ***The CFlow Protection currently present in UniShield is outdated***, It only currently works with `NetShield v1.0`</br>(caused by blocks being randomised after the mentioned version)
 - - - -
@@ -22,16 +25,57 @@ Junk Types | Fully Supported | 1.0 -> 1.3.1
 CFlow | Well Supported for NetShield Protector v1.0, needs support for randomised Blocks. | 1.0 only
 
 # Screenshots
-<img src="https://i.imgur.com/KIFrqpV.png">
-<img src="https://i.imgur.com/jNN333h.png">
+<details>
+ <summary>v1.0</summary>
+ <img src="https://i.imgur.com/KIFrqpV.png">
+ <img src="https://i.imgur.com/jNN333h.png">
+</details>
+<details>
+ <summary>v1.1</summary>
+ <img src="https://i.imgur.com/6TUKVsn.png">
+ <img src="https://i.imgur.com/wE7YAed.png">
+</details>
+
 <!--
 <img src="https://i.imgur.com/xifRIhP.png">
 <img src="https://i.imgur.com/fKkmyis.png">
 -->
 
+# Changelog
+<details>
+ <summary>v1.1</summary>
+ <pre>- Slight Optimisations
+- Added `MinimalLayout` in Configuration File - Improves processing speed by a lot
+- Fixed File Loading Issues
+- Added Processing Counter</pre>
+</details>
+
 # Misc
 <details>
-  <summary>Default Configuration File (config.txt)</summary>
+  <summary>Default Configuration File (config.txt) - v1.1</summary>
+  <pre>[Rendering]
+// Can get laggy if turned on
+DetailedLog		= 0
+// Basic Rendering, Recommended if a large file has to be processed
+MinimalLayout		= 0
+[Misc]
+UseCustomFileBrowser	= 1
+[Protections]
+// Renaming not supported since names are randomised
+// You might need to do some small manual work to have the protected application running after cleaning CFlow.
+Base64Strings		= 1
+Packed_RemovableDrive	= 1
+Packed_ComputerHWID	= 1
+Packed_LicenseFile	= 1
+AntiDe4Dots		= 1
+FakeAttribs		= 1
+JunkMethods		= 1
+ILDasm			= 1
+CFlow			= 1
+IntConfusion		= 1</pre>
+</details>
+<details>
+  <summary>Default Configuration File (config.txt) - v1.0</summary>
   <pre>[Rendering]
 // Can get laggy if turned on
 DetailedLog		= 0
