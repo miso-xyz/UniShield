@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UniShield.Helpers;
 
 namespace UniShield.Protections
 {
@@ -15,7 +16,7 @@ namespace UniShield.Protections
             for (int x = 0; x < Program.asm.Types.Count(); x++ )
             {
                 TypeDef type = Program.asm.Types[x];
-                Program.SetStatusText("Removing AntiDe4Dots... - "+type.Name, ConsoleColor.Black, ConsoleColor.Cyan);
+                Program.SetStatusText("Removing AntiDe4Dots... - "+Utils.FormatStatusString(type.Name) + "\t\t\t\t\t\t\t\t\t ("+x+"/"+(Program.asm.Types.Count-1)+")", ConsoleColor.Black, ConsoleColor.Cyan);
                 if (type.HasInterfaces)
                 {
                     foreach (InterfaceImpl interface_ in type.Interfaces) { if (interface_.Interface.ResolveTypeDef() == type) { if (Program.config.DetailedLog) { Program.AddToLog("[AntiDe4Dot]: Removed '" + type.Name + "'!", ConsoleColor.Green); } Program.asm.Types.Remove(type); x--; count++; } }

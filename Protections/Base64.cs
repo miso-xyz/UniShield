@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UniShield.Helpers;
 
 namespace UniShield.Protections
 {
@@ -29,14 +30,14 @@ namespace UniShield.Protections
         public static void Fix()
         {
             int count = 0;
-            foreach (TypeDef type in Program.asm.Types)
+            for (int x_type = 0; x_type < Program.asm.Types.Count; x_type++)
             {
+                TypeDef type = Program.asm.Types[x_type];
                 foreach (MethodDef method in type.Methods)
                 {
                     if (!method.HasBody) { continue; }
-                    string methodNameFormatted = type.Name + "." + method.Name;
-                    if (methodNameFormatted.Length > 60) { methodNameFormatted = methodNameFormatted.Substring(0, 60); }
-                    Program.SetStatusText("Decoding Base64 Strings - " + methodNameFormatted, ConsoleColor.White, ConsoleColor.DarkCyan);
+                    string methodNameFormatted = Utils.FormatStatusString(type.Name, method.Name);
+                    Program.SetStatusText("Decoding Base64 Strings - " + methodNameFormatted + "\t\t\t\t\t\t\t\t\t (" + x_type + "/" + (Program.asm.Types.Count - 1) + ")", ConsoleColor.White, ConsoleColor.DarkCyan);
                     if (Program.config.DetailedLog) { Program.AddToLog("[Base64]: Now Cleaning '" + methodNameFormatted + "'...", ConsoleColor.Green); }
                     for (int x = 0; x < method.Body.Instructions.Count(); x++)
                     {

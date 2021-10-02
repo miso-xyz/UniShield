@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UniShield.Helpers;
 
 namespace UniShield.Protections
 {
@@ -85,22 +86,21 @@ namespace UniShield.Protections
         {
             bool hasCflow = false;
             int count = 0;
-            foreach (TypeDef type in Program.asm.Types)
+            for (int x_type = 0; x_type < Program.asm.Types.Count; x_type++)
             {
+                TypeDef type = Program.asm.Types[x_type];
                 foreach (MethodDef method in type.Methods)
                 {
                     if (!method.HasBody) { continue; }
-                    string methodNameFormatted = type.Name + "." + method.Name;
-                    if (methodNameFormatted.Length > 60) { methodNameFormatted = methodNameFormatted.Substring(0, 60); }
                     method.Body.KeepOldMaxStack = true;
                     Local cflowVar = null;
-                    try { cflowVar = GetCFlowLocal(method); hasCflow = true; }
-                    catch { continue; }
-                    if (Program.config.DetailedLog) { Program.AddToLog("[CFlow]: Now Cleaning '" + methodNameFormatted + "'...", ConsoleColor.DarkGreen); }
-                    Program.SetStatusText("Cleaning Control Flow - " + methodNameFormatted, ConsoleColor.White, ConsoleColor.DarkMagenta);
+                    try { cflowVar = GetCFlowLocal(method); hasCflow = true; } catch { continue; }
+                    string formatedName = Utils.FormatStatusString(type.Name, method.Name);
+                    if (Program.config.DetailedLog) { Program.AddToLog("[CFlow]: Now Cleaning '" + formatedName + "'...", ConsoleColor.DarkGreen); }
+                    Program.SetStatusText("Cleaning Control Flow - " + formatedName + "\t\t\t\t\t\t\t\t\t (" + x_type + "/" + (Program.asm.Types.Count-1) + ")", ConsoleColor.White, ConsoleColor.DarkMagenta);
                     RemoveIntCycle(method);
                     RemoveCFlowLocalCalls(method, cflowVar);
-                    //RemoveEndingGo->s(method);
+                    //RemoveEndingGotos(method);
                     RemoveCFlowLocalRefs(method, cflowVar);
                     NopCleaning.RemoveUselessNops(method);
                     RemoveUselessBRs(method);

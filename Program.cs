@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using UniShield.Rendering;
 using UniShield.Helpers;
 using System.Drawing;
+using System.Threading;
 
 namespace UniShield
 {
@@ -18,28 +19,48 @@ namespace UniShield
     {
         public static ModuleDefMD asm;
         public static string path;
+        public static string appPath;
         public static Presets preset = new Presets();
         public static Config config = new Config();
         private static FileBrowser filebrowser = new FileBrowser();
-        private static void AddLogSeparator() { AddToLog("-------------------------------------------------------------------------------------------------", ConsoleColor.DarkGray); }
+
+        private static void AddLogSeparator() { string text = ""; int max = Console.WindowWidth - (Console.CursorLeft + 1 + Convert.ToInt32(config.MinimalLayout)); if (!config.MinimalLayout) { max = Console.WindowWidth - 48; } for (int x = 0; x < max; x++) { text += "-"; } AddToLog(text, ConsoleColor.DarkGray); }
+
+        public static string version = "1.1";
+        public static string repoLink = "https://github.com/miso-xyz/UniShield";
 
         [STAThreadAttribute]
         static void Main(string[] args)
         {
+            appPath = AppDomain.CurrentDomain.BaseDirectory;
             Console.Clear();
-            Console.Title = "UniShield - https://github.com/miso-xyz/UniShield";
-            Console.WindowWidth = 160;
-            Console.WindowHeight = 50;
-            Console.BufferHeight = 50;
+            try { config.Read(appPath + @"\config.txt"); } catch { }
+            try { preset.Read(appPath + @"\preset.txt"); } catch { }
+            if (config.MinimalLayout)
+            {
+                Console.Write(" UniShield v" + version + " - ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(repoLink);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("  └ Using Minimal Layout");
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+            Console.Title = "UniShield - " + repoLink;
+            if (!config.MinimalLayout) { Console.WindowWidth = 160; Console.WindowHeight = 50; Console.BufferHeight = 50; }
             Console.CursorVisible = false;
-            if (File.Exists("config.txt")) { config.Read("config.txt"); AddToLog("'config.txt' Loaded!", ConsoleColor.Green); } else { AddToLog("Coudn't find config file, using default config", ConsoleColor.DarkRed); }
-            if (File.Exists("preset.txt")) { preset.Read("preset.txt"); AddToLog("'preset.txt' Loaded!", ConsoleColor.Green); } else { AddToLog("Coudn't find preset file, using default preset", ConsoleColor.DarkRed); }
-            AddToLog("");
-            AddToLog("Rendering Objects...", ConsoleColor.Yellow);
-            PrintCopypasta();
-            DrawBorder();
-            DrawAbout();
-            AddLogSeparator();
+            if (!config.MinimalLayout)
+            {
+                if (File.Exists(appPath + @"\config.txt")) { AddToLog("'config.txt' Loaded!", ConsoleColor.Green); } else { AddToLog("Coudn't find config file, using default config", ConsoleColor.DarkRed); }
+                if (File.Exists(appPath + @"\preset.txt")) { AddToLog("'preset.txt' Loaded!", ConsoleColor.Green); } else { AddToLog("Coudn't find preset file, using default preset", ConsoleColor.DarkRed); }
+                if (File.Exists(appPath + @"\drawing.png")) { AddToLog("Found image file!", ConsoleColor.Green); } else { AddToLog("Coudn't find image file", ConsoleColor.DarkRed); }
+                AddToLog("");
+                AddToLog("Rendering Objects...", ConsoleColor.Yellow);
+                PrintCopypasta();
+                DrawBorder();
+                DrawAbout();
+                AddLogSeparator();
+            }
             if (args.Count() == 0) { AddToLog("No input file found!", ConsoleColor.Red); SetStatusText("No input file found!", ConsoleColor.White, ConsoleColor.DarkRed); goto end; }
             AddToLog("Reading " + '"' + Path.GetFileName(args[0]) + '"' + "...", ConsoleColor.Yellow);
             SetStatusText("Reading " + '"' + Path.GetFileName(args[0]) + '"' + "...", ConsoleColor.White, ConsoleColor.DarkYellow);
@@ -115,6 +136,7 @@ namespace UniShield
                         {
                             AddToLog("    Coudn't Find License.dat in Application Folder, you'll have to locate it yourself", ConsoleColor.Red);
                             AddToLog("");
+                            if (config.MinimalLayout) { config.CustomFileBrowser = false; }
                             if (config.CustomFileBrowser)
                             {
                                 FileBrowser.ShowTutorial();
@@ -244,8 +266,14 @@ namespace UniShield
         static List<LogLine> LogText = new List<LogLine>();
         public static void AddToLog(string text, ConsoleColor foreColor = ConsoleColor.Gray, ConsoleColor backColor = ConsoleColor.Black)
         {
-            LogText.Insert(0,new LogLine(text, backColor, foreColor));
-            UpdateLog();
+            if (config.MinimalLayout)
+            {
+                Console.ForegroundColor = foreColor;
+                Console.BackgroundColor = backColor;
+                Console.WriteLine(" " + text);
+                Console.ResetColor();
+            }
+            else { LogText.Insert(0, new LogLine(text, backColor, foreColor)); UpdateLog(); }
         }
 
         static void UpdateLog(bool endLine = true)
@@ -292,8 +320,9 @@ namespace UniShield
 
         static void DrawAbout()
         {
+            if (config.MinimalLayout) { return; }
             Console.SetCursorPosition(0, 0);
-            if (File.Exists("drawing.png")) { new AsciiImage(new Bitmap(Image.FromFile("drawing.png"), 0x2b, 0x19)).PrintAscii(true); }
+            if (File.Exists(appPath + @"\drawing.png")) { new AsciiImage(new Bitmap(Image.FromFile(appPath + @"\drawing.png"), 0x2b, 0x19)).PrintAscii(true); }
             Console.WriteLine(); Console.WriteLine();
             for (int x = 0; x < 45; x++)
             {
@@ -304,13 +333,13 @@ namespace UniShield
             Console.CursorLeft = 0;
             Console.WriteLine(" - UniShield");
             Console.Write("    └ ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("https://github.com/miso-xyz/UniShield");
             Console.ResetColor();
             Console.Write("    └ Version: ");
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(" 1.0 ");
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(" " + version + " ");
             Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine(" fuck the following:");
@@ -332,6 +361,7 @@ namespace UniShield
 
         static void DrawBorder()
         {
+            if (config.MinimalLayout) { return; }
             Console.ResetColor();
             Console.CursorLeft = 45;
             Console.Write("├");
@@ -348,6 +378,7 @@ namespace UniShield
 
         static void PrintCopypasta()
         {
+            if (config.MinimalLayout) { return; }
             int yPos = Console.CursorTop;
             Console.SetCursorPosition(45, 0);
             Console.ResetColor();
@@ -385,6 +416,7 @@ namespace UniShield
 
         public static void SetStatusText(string text, ConsoleColor foreColor, ConsoleColor backColor)
         {
+            if (config.MinimalLayout) { return; }
             int yPos = Console.CursorTop;
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
             Console.ForegroundColor = foreColor;

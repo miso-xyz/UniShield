@@ -40,6 +40,21 @@ namespace UniShield.Helpers
             catch { return false; }
         }
 
+        public static string FormatStatusString(string text, int charLimit = 60, char fillChar = ' ')
+        {
+            if (text.Length > charLimit) { text = text.Substring(0, charLimit); }
+            else { for (int x_char = 0; x_char < text.Length; x_char++) { if (text.Length == charLimit) { break; } text += fillChar; } }
+            return text;
+        }
+
+        public static string FormatStatusString(string typeName, string methodName, int charLimit = 60, char fillChar = ' ')
+        {
+            string methodNameFormatted = typeName + "." + methodName;
+            if (methodNameFormatted.Length > charLimit) { methodNameFormatted = methodNameFormatted.Substring(0, charLimit); }
+            else { for (int x_char = 0; x_char < methodNameFormatted.Length; x_char++) { if (methodNameFormatted.Length == charLimit) { break; } methodNameFormatted += fillChar; } }
+            return methodNameFormatted;
+        }
+
         public static object FormatCall(string line)
         {
             string[] split = line.Split(',');

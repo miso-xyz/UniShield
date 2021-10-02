@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UniShield.Helpers;
 
 namespace UniShield.Protections
 {
@@ -18,7 +19,7 @@ namespace UniShield.Protections
             for (int x = 0; x < Program.asm.Types.Count(); x++)
             {
                 TypeDef type = Program.asm.Types[x];
-                Program.SetStatusText("Searching Useless Types - " + type.Name, ConsoleColor.Black, ConsoleColor.Magenta);
+                Program.SetStatusText("Searching Useless Types - " + Utils.FormatStatusString(type.Name) + "\t\t\t\t\t\t\t\t\t ("+x+"/"+(Program.asm.Types.Count-1)+")" , ConsoleColor.Black, ConsoleColor.Magenta);
                 if (type == Program.asm.GlobalType) { continue; }
                 if (!type.HasMethods)
                 {

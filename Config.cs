@@ -10,6 +10,7 @@ namespace UniShield
     {
         public bool DetailedLog = false;
         public bool CustomFileBrowser = true;
+        public bool MinimalLayout = false;
 
         public bool Prot_PackedRemDrives = true;
         public bool Prot_PackedComputerHWID = true;
@@ -32,42 +33,19 @@ namespace UniShield
                 string p2 = line.Split("=".ToCharArray())[1].Remove(0, 1);
                 switch (p1)
                 {
-                    case "DetailedLog":
-                        DetailedLog = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "UseCustomFileBrowser":
-                        CustomFileBrowser = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "Packed_RemovableDrive":
-                        Prot_PackedRemDrives = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "Packed_ComputerHWID":
-                        Prot_PackedComputerHWID = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "Packed_LicenseFile":
-                        Prot_PackedLicFile = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "AntiDe4Dots":
-                        Prot_AntiDe4Dots = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "FakeAttribs":
-                        Prot_FakeAtrribs = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "JunkMethods":
-                        Prot_JunkMethods = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "Base64Strings":
-                        Prot_Base64Strings = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "CFlow":
-                        Prot_CFlow = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "ILDasm":
-                        Prot_ILDasm = Convert.ToBoolean(int.Parse(p2));
-                        break;
-                    case "IntConfusion":
-                        Prot_IntConf = Convert.ToBoolean(int.Parse(p2));
-                        break;
+                    case "DetailedLog": DetailedLog = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "UseCustomFileBrowser": CustomFileBrowser = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "Packed_RemovableDrive": Prot_PackedRemDrives = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "Packed_ComputerHWID": Prot_PackedComputerHWID = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "Packed_LicenseFile": Prot_PackedLicFile = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "AntiDe4Dots": Prot_AntiDe4Dots = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "FakeAttribs": Prot_FakeAtrribs = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "JunkMethods": Prot_JunkMethods = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "Base64Strings": Prot_Base64Strings = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "CFlow": Prot_CFlow = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "ILDasm": Prot_ILDasm = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "IntConfusion": Prot_IntConf = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "MinimalLayout": MinimalLayout = Convert.ToBoolean(int.Parse(p2)); break;
                 }
             }
         }

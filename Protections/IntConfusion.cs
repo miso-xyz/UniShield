@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UniShield.Helpers;
 
 namespace UniShield.Protections
 {
@@ -15,12 +16,12 @@ namespace UniShield.Protections
             foreach (TypeDef type in Program.asm.Types)
             {
                 if (type.IsGlobalModuleType) { continue; }
-                foreach (MethodDef methods in type.Methods)
+                for (int x_method = 0; x_method < type.Methods.Count; x_method++)
                 {
-                    string methodNameFormatted = type.Name + "." + methods.Name;
-                    if (methodNameFormatted.Length > 60) { methodNameFormatted = methodNameFormatted.Substring(0, 60); }
+                    MethodDef methods = type.Methods[x_method];
+                    string methodNameFormatted = Utils.FormatStatusString(type.Name, methods.Name);
                     if (Program.config.DetailedLog) { Program.AddToLog("Cleaning IntConfusion - " + methodNameFormatted, ConsoleColor.Green); }
-                    Program.SetStatusText("Cleaning IntConfusion - " + methodNameFormatted, ConsoleColor.White, ConsoleColor.DarkGreen);
+                    Program.SetStatusText("Cleaning IntConfusion - " + methodNameFormatted + "\t\t\t\t\t\t\t\t\t (" + x_method + "/" + (type.Methods.Count-1) + ")", ConsoleColor.White, ConsoleColor.DarkGreen);
                     if (!methods.HasBody) { continue; }
                     methods.Body.InitLocals = false;
                     for (int x = 0; x < methods.Body.Instructions.Count(); x++)

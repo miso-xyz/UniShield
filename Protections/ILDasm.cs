@@ -13,10 +13,11 @@ namespace UniShield.Protections
         public static void Fix()
         {
             int count = 0;
-            foreach (ModuleDef module in Program.asm.Assembly.Modules)
+            for (int x_module = 0; x_module < Program.asm.Assembly.Modules.Count; x_module++)
             {
-                if (Program.config.DetailedLog) { Program.AddToLog("Searching ILDasm - " + module.Name, ConsoleColor.Green); }
-                Program.SetStatusText("Searching ILDasm - " + module.Name, ConsoleColor.White, ConsoleColor.DarkYellow);
+                ModuleDef module = Program.asm.Assembly.Modules[x_module];
+                if (Program.config.DetailedLog) { Program.AddToLog("Searching ILDasm - "+ module.Name, ConsoleColor.Green); }
+                Program.SetStatusText("Searching ILDasm - " + Utils.FormatStatusString(module.Name) + "\t\t\t\t\t\t\t\t\t (" + (x_module+1) + "/" + (Program.asm.Assembly.Modules.Count) + ")", ConsoleColor.White, ConsoleColor.DarkYellow);
                 if (module.HasCustomAttributes)
                 {
                     for (int x = 0; x < module.CustomAttributes.Count(); x++)
