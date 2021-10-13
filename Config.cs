@@ -22,6 +22,7 @@ namespace UniShield
         public bool Prot_Base64Strings = true;
         public bool Prot_ILDasm = true;
         public bool Prot_IntConf = true;
+        public bool Prot_Calli = true;
 
         public void Read(string path)
         {
@@ -46,6 +47,7 @@ namespace UniShield
                     case "ILDasm": Prot_ILDasm = Convert.ToBoolean(int.Parse(p2)); break;
                     case "IntConfusion": Prot_IntConf = Convert.ToBoolean(int.Parse(p2)); break;
                     case "MinimalLayout": MinimalLayout = Convert.ToBoolean(int.Parse(p2)); break;
+                    case "Callis": Prot_Calli = Convert.ToBoolean(int.Parse(p2)); break;
                 }
             }
         }

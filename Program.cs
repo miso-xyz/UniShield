@@ -12,6 +12,7 @@ using UniShield.Rendering;
 using UniShield.Helpers;
 using System.Drawing;
 using System.Threading;
+using System.Diagnostics;
 
 namespace UniShield
 {
@@ -26,29 +27,28 @@ namespace UniShield
 
         private static void AddLogSeparator() { string text = ""; int max = Console.WindowWidth - (Console.CursorLeft + 1 + Convert.ToInt32(config.MinimalLayout)); if (!config.MinimalLayout) { max = Console.WindowWidth - 48; } for (int x = 0; x < max; x++) { text += "-"; } AddToLog(text, ConsoleColor.DarkGray); }
 
-        public static string version = "1.1";
-        public static string repoLink = "https://github.com/miso-xyz/UniShield";
-
         [STAThreadAttribute]
         static void Main(string[] args)
         {
             appPath = AppDomain.CurrentDomain.BaseDirectory;
+            path = Path.GetFullPath(args[0]);
             Console.Clear();
             try { config.Read(appPath + @"\config.txt"); } catch { }
             try { preset.Read(appPath + @"\preset.txt"); } catch { }
             if (config.MinimalLayout)
             {
-                Console.Write(" UniShield v" + version + " - ");
+                Console.Write(" UniShield v" + Updater.CurrentVersion + " - ");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(repoLink);
+                Console.WriteLine(Updater.RepoLink);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("  └ Using Minimal Layout");
                 Console.ResetColor();
                 Console.WriteLine();
             }
-            Console.Title = "UniShield - " + repoLink;
-            if (!config.MinimalLayout) { Console.WindowWidth = 160; Console.WindowHeight = 50; Console.BufferHeight = 50; }
+            Console.Title = "UniShield - " + Updater.RepoLink;
             Console.CursorVisible = false;
+            CheckForUpdates();
+            if (!config.MinimalLayout) { Console.WindowWidth = 160; Console.WindowHeight = 50; Console.BufferHeight = 50; }
             if (!config.MinimalLayout)
             {
                 if (File.Exists(appPath + @"\config.txt")) { AddToLog("'config.txt' Loaded!", ConsoleColor.Green); } else { AddToLog("Coudn't find config file, using default config", ConsoleColor.DarkRed); }
@@ -187,44 +187,17 @@ namespace UniShield
             {
                 AddToLog("Application not Packed!", ConsoleColor.Green);
                 AddToLog("");
+
                 //AddToLog("Now Renaming Methods...", ConsoleColor.Yellow);
                 //Renaming.Fix();
-                if (config.Prot_ILDasm)
-                {
-                    AddToLog("Now Removing ILDasm...", ConsoleColor.Yellow);
-                    ILDasm.Fix();
-                    AddToLog("");
-                }
-                if (config.Prot_Base64Strings)
-                {
-                    AddToLog("Now Decoding Base64 Strings...", ConsoleColor.Yellow);
-                    Base64.Fix();
-                    AddToLog("");
-                }
-                if (config.Prot_AntiDe4Dots)
-                {
-                    AddToLog("Now Removing AntiDe4Dots...", ConsoleColor.Yellow);
-                    AntiDe4dot.Fix();
-                    AddToLog("");
-                }
-                if (config.Prot_FakeAtrribs)
-                {
-                    AddToLog("Now Removing Fake Attributes...", ConsoleColor.Yellow);
-                    FakeAttribs.Fix();
-                    AddToLog("");
-                }
-                if (config.Prot_IntConf)
-                {
-                    AddToLog("Now Fixing Int Confusion...", ConsoleColor.Yellow);
-                    IntConfusion.Fix();
-                    AddToLog("");
-                }
-                if (config.Prot_CFlow)
-                {
-                    AddToLog("Now Cleaning Control Flow...", ConsoleColor.Yellow);
-                    CFlow.Fix();
-                    AddLogSeparator();
-                }
+                if (config.Prot_ILDasm) { AddToLog("Now Removing ILDasm...", ConsoleColor.Yellow); ILDasm.Fix(); AddToLog(""); }
+                if (config.Prot_Calli) { AddToLog("Now Callis...", ConsoleColor.Yellow); Calli.Fix(); AddLogSeparator(); }
+                if (config.Prot_Base64Strings) { AddToLog("Now Decoding Base64 Strings...", ConsoleColor.Yellow); Base64.Fix(); AddToLog(""); }
+                if (config.Prot_AntiDe4Dots) { AddToLog("Now Removing AntiDe4Dots...", ConsoleColor.Yellow); AntiDe4dot.Fix(); AddToLog(""); }
+                if (config.Prot_FakeAtrribs) { AddToLog("Now Removing Fake Attributes...", ConsoleColor.Yellow); FakeAttribs.Fix(); AddToLog(""); }
+                if (config.Prot_IntConf) { AddToLog("Now Fixing Int Confusion...", ConsoleColor.Yellow); IntConfusion.Fix(); AddToLog(""); }
+                if (config.Prot_CFlow) { AddToLog("Now Cleaning Control Flow...", ConsoleColor.Yellow); CFlow.Fix(); AddLogSeparator(); }
+
                 AddToLog("Now saving Cleaned ASM...", ConsoleColor.Yellow);
                 SetStatusText("Now saving Cleaned ASM...", ConsoleColor.White, ConsoleColor.DarkYellow);
                 string outputName = path + "_UniShield_IL-Cleaned.exe";
@@ -339,7 +312,7 @@ namespace UniShield
             Console.Write("    └ Version: ");
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(" " + version + " ");
+            Console.WriteLine(" v" + Updater.CurrentVersion + " ");
             Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine(" fuck the following:");
@@ -410,6 +383,113 @@ namespace UniShield
                         break; //  
                 }
             }
+        }
+
+        public static void CheckForUpdates()
+        {
+            if (!Updater.HasInternetConnection()) { return; }
+            Updater update = new Updater(Updater.GetUpdate());
+            if (!update.IsRunningLatest())
+            {
+                if (DrawUpdateDialog(update))
+                {
+                    update.DownloadUpdate();
+                    Application.Exit();
+                }
+            }
+        }
+
+        public static bool DrawUpdateDialog(Updater updaterClass)
+        {
+            Console.WindowWidth = 120; Console.WindowHeight = 18; Console.BufferHeight = 18;
+            int buttonSelected = 1;
+            while (true)
+            {
+                Console.SetCursorPosition(0, 1);
+                if (File.Exists(appPath + @"\info.png")) { new AsciiImage(new Bitmap(Image.FromFile(appPath + @"\info.png"), 25, 16)).PrintAscii(true, 2); }
+                Console.SetCursorPosition(30, 2);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("New Update Found!");
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.SetCursorPosition(30, 4);
+                Console.Write("Current Version: " + Updater.CurrentVersion);
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.SetCursorPosition(30, 5);
+                Console.Write(" Latest Version: " + updaterClass.LatestVersion);
+                Console.SetCursorPosition(30, 7);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Size: " + updaterClass.UpdateSize);
+                Console.ResetColor();
+                Console.SetCursorPosition(30, 9);
+                foreach (string line in updaterClass.ChangeLog)
+                {
+                    Console.CursorLeft = 30;
+                    if (line.StartsWith("<"))
+                    {
+                        Console.ResetColor();
+                        string[] args = line.Replace("<", null).Replace(">", null).Split(',');
+                        foreach (string argLine in args)
+                        {
+                            string p1 = argLine.Split('=')[0];
+                            string p2 = argLine.Split('=')[1];
+                            ConsoleColor color = ConsoleColor.Gray;
+                            switch (p2)
+                            {
+                                case "Green": color = ConsoleColor.Green; break;
+                                case "DarkGreen": color = ConsoleColor.DarkGreen; break;
+                                case "Cyan": color = ConsoleColor.Cyan; break;
+                                case "DarkCyan": color = ConsoleColor.DarkCyan; break;
+                                //case "Gray": color = ConsoleColor.Gray; break;
+                                case "DarkGray": color = ConsoleColor.DarkGray; break;
+                                case "Yellow": color = ConsoleColor.Yellow; break;
+                                case "DarkYellow": color = ConsoleColor.DarkYellow; break;
+                                case "Blue": color = ConsoleColor.Blue; break;
+                                case "DarkBlue": color = ConsoleColor.DarkBlue; break;
+                                case "Black": color = ConsoleColor.Black; break;
+                                case "White": color = ConsoleColor.White; break;
+                                case "Red": color = ConsoleColor.Red; break;
+                                case "DarkRed": color = ConsoleColor.DarkRed; break;
+                                case "Magenta": color = ConsoleColor.Magenta; break;
+                                case "DarkMagenta": color = ConsoleColor.Magenta; break;
+                            }
+                            switch (p1)
+                            {
+                                case "FG": Console.ForegroundColor = color; break;
+                                case "BG": Console.BackgroundColor = color; break;
+                            }
+                        }
+                    }
+                    else { Console.WriteLine(" " + line + " "); }
+                }
+                ConsoleColor bg = ConsoleColor.Black, fg = ConsoleColor.Yellow;
+                if (buttonSelected == 0) { bg = ConsoleColor.Yellow; fg = ConsoleColor.Black; } Console.SetCursorPosition(100, 16); DrawUpdateButtons(" No ", bg, fg);
+                if (buttonSelected == 1) { bg = ConsoleColor.Yellow; fg = ConsoleColor.Black; } Console.SetCursorPosition(110, 16); DrawUpdateButtons(" Yes ", bg, fg);
+            wait:
+                switch (Console.ReadKey().Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        buttonSelected = 0;
+                         Console.SetCursorPosition(100, 16); DrawUpdateButtons(" No ", ConsoleColor.Yellow, ConsoleColor.Black);
+                         Console.SetCursorPosition(110, 16); DrawUpdateButtons(" Yes ", ConsoleColor.Black, ConsoleColor.Yellow);
+                         goto wait;
+                    case ConsoleKey.RightArrow:
+                         buttonSelected = 1;
+                         Console.SetCursorPosition(100, 16); DrawUpdateButtons(" No ", ConsoleColor.Black, ConsoleColor.Yellow);
+                         Console.SetCursorPosition(110, 16); DrawUpdateButtons(" Yes ", ConsoleColor.Yellow, ConsoleColor.Black);
+                         goto wait;
+                    case ConsoleKey.Enter:
+                        Console.Clear();
+                        return Convert.ToBoolean(buttonSelected);
+                }
+            }
+        }
+
+        private static void DrawUpdateButtons(string text, ConsoleColor backcolor, ConsoleColor foreColor)
+        {
+            Console.BackgroundColor = backcolor;
+            Console.ForegroundColor = foreColor;
+            Console.Write(text);
+            Console.ResetColor();
         }
 
         static void FinishLinePadding(int posLeft = 1, bool finishLine = false, char ch = ' ') { for (int x = Console.CursorLeft; x < Console.WindowWidth - posLeft; x++) { Console.Write(ch); } if (finishLine) { Console.WriteLine(); } }

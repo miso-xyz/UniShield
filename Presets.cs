@@ -42,6 +42,7 @@ namespace UniShield
         }
 
         public MethodRef SymmetricAlgorithm_Decryptor = new MethodRef("System.Security.Cryptography", "SymmetricAlgorithm", "CreateDecryptor");
+        public MethodRef Encoding_GetUTF8 = new MethodRef("System.Text", "Encoding", "get_UTF8");
         public MethodRef Encoding_GetAscii = new MethodRef("System.Text", "Encoding", "get_ASCII");
         public MethodRef Encoding_GetBytes = new MethodRef("System.Text", "Encoding", "GetBytes");
         public ClassRef HMACSHA256_HashGen = new ClassRef("System.Security.Cryptography", "HMACSHA256");
@@ -63,6 +64,9 @@ namespace UniShield
                         break;
                     case "Encoding_GetAscii":
                         Encoding_GetAscii = (MethodRef)Utils.FormatCall(p2);
+                        break;
+                    case "Encoding_GetUTF8":
+                        Encoding_GetUTF8 = (MethodRef)Utils.FormatCall(p2);
                         break;
                     case "Encoding_GetBytes":
                         Encoding_GetBytes = (MethodRef)Utils.FormatCall(p2);

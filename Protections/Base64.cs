@@ -42,7 +42,8 @@ namespace UniShield.Protections
                     for (int x = 0; x < method.Body.Instructions.Count(); x++)
                     {
                         Instruction inst = method.Body.Instructions[x];
-                        if (inst.OpCode.Equals(OpCodes.Ldstr)) {
+                        if (inst.OpCode.Equals(OpCodes.Ldstr))
+                        {
                             string dec = TryDecodeBase64(inst.Operand.ToString());
                             if (dec != inst.Operand.ToString())
                             {
@@ -56,6 +57,8 @@ namespace UniShield.Protections
                                 count++;
                                 inst.Operand = dec;
                             }
+                            if (method.Body.Instructions[x + 1].OpCode.Equals(OpCodes.Call) && method.Body.Instructions[x + 2].OpCode.Equals(OpCodes.Callvirt)) { method.Body.Instructions.RemoveAt(x + 1); method.Body.Instructions.RemoveAt(x + 1); }
+                            if (Utils.isFullMethod(method.Body.Instructions[x - 1].Operand, Program.preset.Encoding_GetUTF8)) { method.Body.Instructions.RemoveAt(x - 1); x--; }
                         }
                     }
                 }

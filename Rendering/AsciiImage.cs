@@ -34,13 +34,14 @@ namespace UniShield.Rendering
 		}
 
 		// Token: 0x06000004 RID: 4 RVA: 0x00002080 File Offset: 0x00000280
-		public unsafe void PrintAscii(bool asciiMode)
+		public unsafe void PrintAscii(bool asciiMode, int xOffsetPrint = 0)
 		{
 			BitmapData info = this.Image.LockBits(new Rectangle(0, 0, this.Image.Width, this.Image.Height), ImageLockMode.ReadOnly, this.Image.PixelFormat);
 			try
 			{
 				for (int y = 0; y < info.Height; y++)
 				{
+                    Console.CursorLeft += xOffsetPrint;
 					for (int x = 0; x < info.Width; x++)
 					{
 						Color color = Color.FromArgb(*(int*)((void*)(info.Scan0 + y * info.Stride + x * 4)));
