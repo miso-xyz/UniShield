@@ -52,7 +52,7 @@ CFlow | Well Supported for NetShield Protector v1.0, needs support for randomise
  <summary>v1.2</summary>
  <pre>- Improved Base64 String Cleanup
 - Added Support for Calli Instructions
-- Added In-app Updaterr</pre>
+- Added In-app Updater</pre>
 </details>
 <details>
  <summary>v1.1</summary>
