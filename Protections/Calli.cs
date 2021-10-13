@@ -21,7 +21,7 @@ namespace UniShield.Protections
                     if (!method.HasBody) { continue; }
                     string formatedName = Utils.FormatStatusString(type.Name, method.Name);
                     if (Program.config.DetailedLog) { Program.AddToLog("[Callis]: Now Cleaning '" + formatedName + "'...", ConsoleColor.DarkGreen); }
-                    Program.SetStatusText("Cleaning Control Flow - " + formatedName + "\t\t\t\t\t\t\t\t\t (" + x_type + "/" + (Program.asm.Types.Count - 1) + ")", ConsoleColor.White, ConsoleColor.DarkMagenta);
+                    Program.SetStatusText("Cleaning Callis - " + formatedName + "\t\t\t\t\t\t\t\t\t (" + x_type + "/" + (Program.asm.Types.Count - 1) + ")", ConsoleColor.White, ConsoleColor.DarkMagenta);
                     for (int x = 0; x < method.Body.Instructions.Count(); x++)
                     {
                         Instruction inst = method.Body.Instructions[x];

@@ -41,6 +41,7 @@ namespace UniShield
             public string Class;
         }
 
+        public MethodRef DecodeBase64String = new MethodRef("System", "Convert", "FromBase64String");
         public MethodRef SymmetricAlgorithm_Decryptor = new MethodRef("System.Security.Cryptography", "SymmetricAlgorithm", "CreateDecryptor");
         public MethodRef Encoding_GetUTF8 = new MethodRef("System.Text", "Encoding", "get_UTF8");
         public MethodRef Encoding_GetAscii = new MethodRef("System.Text", "Encoding", "get_ASCII");
@@ -48,7 +49,7 @@ namespace UniShield
         public ClassRef HMACSHA256_HashGen = new ClassRef("System.Security.Cryptography", "HMACSHA256");
         public ClassRef SHA256_CryptoService = new ClassRef("System.Security.Cryptography", "SHA256CryptoServiceProvider");
         public ClassRef SupressIldasmAttribute = new ClassRef("System.Runtime.CompilerServices", "SuppressIldasmAttribute");
-
+        
         public void Read(string path)
         {
             string[] fileData = File.ReadAllLines(path);
@@ -59,27 +60,14 @@ namespace UniShield
                 string p2 = line.Split("=".ToCharArray())[1].Remove(0, 1);
                 switch (p1)
                 {
-                    case "SymmetricAlgorithm_Decryptor":
-                        SymmetricAlgorithm_Decryptor = (MethodRef)Utils.FormatCall(p2);
-                        break;
-                    case "Encoding_GetAscii":
-                        Encoding_GetAscii = (MethodRef)Utils.FormatCall(p2);
-                        break;
-                    case "Encoding_GetUTF8":
-                        Encoding_GetUTF8 = (MethodRef)Utils.FormatCall(p2);
-                        break;
-                    case "Encoding_GetBytes":
-                        Encoding_GetBytes = (MethodRef)Utils.FormatCall(p2);
-                        break;
-                    case "HMACSHA256_HashGen":
-                        HMACSHA256_HashGen = (ClassRef)Utils.FormatCall(p2);
-                        break;
-                    case "SHA256_CryptoService":
-                        SHA256_CryptoService = (ClassRef)Utils.FormatCall(p2);
-                        break;
-                    case "SupressIldasmAttribute":
-                        SupressIldasmAttribute = (ClassRef)Utils.FormatCall(p2);
-                        break;
+                    case "SymmetricAlgorithm_Decryptor": SymmetricAlgorithm_Decryptor = (MethodRef)Utils.FormatCall(p2); break;
+                    case "Encoding_GetAscii": Encoding_GetAscii = (MethodRef)Utils.FormatCall(p2); break;
+                    case "Encoding_GetUTF8": Encoding_GetUTF8 = (MethodRef)Utils.FormatCall(p2); break;
+                    case "Encoding_GetBytes": Encoding_GetBytes = (MethodRef)Utils.FormatCall(p2); break;
+                    case "HMACSHA256_HashGen": HMACSHA256_HashGen = (ClassRef)Utils.FormatCall(p2); break;
+                    case "SHA256_CryptoService": SHA256_CryptoService = (ClassRef)Utils.FormatCall(p2); break;
+                    case "SupressIldasmAttribute": SupressIldasmAttribute = (ClassRef)Utils.FormatCall(p2); break;
+                    case "DecodeBase64String": DecodeBase64String = (MethodRef)Utils.FormatCall(p2); break;
                 }
             }
         }

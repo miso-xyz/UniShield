@@ -14,7 +14,7 @@ namespace UniShield.Helpers
 
         public static string HashHWID(string HWID, string HashKey = HWIDHash_Key)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes("bAI!J6XwWO&A");
+            byte[] bytes = Encoding.ASCII.GetBytes(HashKey);
             byte[] array = new HMACSHA256 { Key = Encoding.ASCII.GetBytes(HashKey) }.ComputeHash(Encoding.UTF8.GetBytes(HWID));
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < array.Length; i++) { stringBuilder.Append(array[i].ToString("x2")); }

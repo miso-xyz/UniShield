@@ -23,9 +23,8 @@ namespace UniShield
         public static string appPath;
         public static Presets preset = new Presets();
         public static Config config = new Config();
-        private static FileBrowser filebrowser = new FileBrowser();
 
-        private static void AddLogSeparator() { string text = ""; int max = Console.WindowWidth - (Console.CursorLeft + 1 + Convert.ToInt32(config.MinimalLayout)); if (!config.MinimalLayout) { max = Console.WindowWidth - 48; } for (int x = 0; x < max; x++) { text += "-"; } AddToLog(text, ConsoleColor.DarkGray); }
+        public static void AddLogSeparator() { string text = ""; int max = Console.WindowWidth - (Console.CursorLeft + 1 + Convert.ToInt32(config.MinimalLayout)); if (!config.MinimalLayout) { max = Console.WindowWidth - 48; } for (int x = 0; x < max; x++) { text += "-"; } AddToLog(text, ConsoleColor.DarkGray); }
 
         [STAThreadAttribute]
         static void Main(string[] args)
@@ -78,111 +77,7 @@ namespace UniShield
             //InitializeDrawingEnv();
             AddToLog("Checking if packed...", ConsoleColor.Yellow);
             SetStatusText("Checking if packed...", ConsoleColor.White, ConsoleColor.DarkYellow);
-            bool checkIfPacked = Licensing.GetLicensingType() != "???";
-            if (checkIfPacked)
-            {
-                byte[] decryptedASM = null;
-                AddToLog("Application is Packed - Licensing Protection Found!", ConsoleColor.Green);
-                AddToLog("");
-                SetStatusText("Figuring out Licensing Type...", ConsoleColor.White, ConsoleColor.DarkYellow);
-                switch (Licensing.GetLicensingType())
-                {
-                    case "USB":
-                        AddToLog("  - Encrypted using Removable Drive HWID (Hardware ID)", ConsoleColor.Yellow);
-                        AddToLog("");
-                        SetStatusText("Calculating Removable Drives HWID...", ConsoleColor.White, ConsoleColor.DarkMagenta);
-                        EncryptionHelper.RemovableDriveHWID[] removableDrivesHWIDs = EncryptionHelper.GetRemovableDrivesHWID();
-                        if (removableDrivesHWIDs.Count() == 0) { AddToLog("No Removable Drives Found!", ConsoleColor.Red); break; }
-                        foreach (EncryptionHelper.RemovableDriveHWID HWID in removableDrivesHWIDs)
-                        {
-                            SetStatusText("Attempting Decryption - " + HWID.drive.Name, ConsoleColor.White, ConsoleColor.DarkYellow);
-                            AddToLog("Attempting Decryption - " + HWID.drive.Name, ConsoleColor.DarkYellow);
-                            try
-                            {
-                                decryptedASM = EncryptionHelper.DecryptPackedASM(Licensing.GetEncryptedASM(), HWID.HWID, Licensing.GetEncryptedASMIV());
-                                AddToLog("");
-                                AddToLog("Packed Assembly Successfully Decrypted!", ConsoleColor.Green);
-                                AddToLog("  ├ Drive Letter: " + HWID.drive.Name, ConsoleColor.Magenta);
-                                AddToLog("  └ Drive HWID:   " + HWID.HWID, ConsoleColor.DarkMagenta);
-                                AddToLog("");
-                                break;
-                            }
-                            catch { AddToLog("Invalid HWID!", ConsoleColor.DarkRed); AddToLog(""); }
-                        }
-                        if (decryptedASM == null) { AddToLog("No Removable Drives were valid!", ConsoleColor.Red); }
-                        break;
-                    case "HWIDLocked":
-                        AddToLog("  - Encrypted using Computer HWID (Hardware ID)", ConsoleColor.Yellow);
-                        AddToLog("");
-                        try
-                        {
-                            SetStatusText("Calculating HWID...", ConsoleColor.White, ConsoleColor.DarkMagenta);
-                            string compHWID = EncryptionHelper.GetHWID();
-                            SetStatusText("Attempting Decryption...", ConsoleColor.White, ConsoleColor.DarkYellow);
-                            AddToLog("Attempting Decryption...", ConsoleColor.DarkYellow);
-                            decryptedASM = EncryptionHelper.DecryptPackedASM(Licensing.GetEncryptedASM(), compHWID, Licensing.GetEncryptedASMIV());
-                            AddToLog("Packed Assembly Successfully Decrypted!", ConsoleColor.Green);
-                            AddToLog("  └ HWID: " + compHWID, ConsoleColor.DarkMagenta);
-                            AddToLog("");
-                        }
-                        catch { AddToLog("Failed to decrypt Packed Assembly!", ConsoleColor.Red); SetStatusText("Decryption Failed!", ConsoleColor.White, ConsoleColor.DarkRed); }
-                        break;
-                    case "LicenseFile":
-                        AddToLog("  - Encrypted using License File", ConsoleColor.Yellow);
-                        AddToLog("");
-                        string file = "";
-                        AddToLog("    Searching for License.dat...", ConsoleColor.Yellow);
-                        if (!File.Exists("License.dat") || !File.Exists(Directory.GetParent(Path.GetFullPath(path)).FullName + @"\License.dat"))
-                        {
-                            AddToLog("    Coudn't Find License.dat in Application Folder, you'll have to locate it yourself", ConsoleColor.Red);
-                            AddToLog("");
-                            if (config.MinimalLayout) { config.CustomFileBrowser = false; }
-                            if (config.CustomFileBrowser)
-                            {
-                                FileBrowser.ShowTutorial();
-                                AddToLog("");
-                                AddLogSeparator();
-                                SetStatusText("Waiting for User Input...", ConsoleColor.White, ConsoleColor.DarkCyan);
-                                filebrowser.title = "Select License File";
-                                filebrowser.defaultExtFilter = 1;
-                                filebrowser.ListDrives();
-                                file = filebrowser.Initialize();
-                                DrawAbout();
-                                if (file == null) { AddToLog("Operation Cancelled!", ConsoleColor.Red); SetStatusText("Operation Cancelled!", ConsoleColor.White, ConsoleColor.DarkRed); goto end; }
-                            }
-                            else
-                            {
-                                OpenFileDialog ofd = new OpenFileDialog();
-                                ofd.Filter = "License File|License.dat|All Files|*.*";
-                                SetStatusText("Waiting for User Input...", ConsoleColor.White, ConsoleColor.DarkCyan);
-                                if (ofd.ShowDialog() == DialogResult.OK) { file = ofd.FileName; }
-                                else { AddToLog("Operation Cancelled!", ConsoleColor.Red); SetStatusText("Operation Cancelled!", ConsoleColor.White, ConsoleColor.DarkRed); goto end; }
-                            }
-                        }
-                        else { AddToLog("    License.dat Found!", ConsoleColor.Green); AddToLog(""); }
-                        if (File.Exists("License.dat")) { file = "License.dat"; }
-                        else if (File.Exists(Directory.GetParent(Path.GetFullPath(path)).FullName)) { file = Directory.GetParent(Path.GetFullPath(path)).FullName + "\\License.dat"; }
-                        SetStatusText("Attempting Decryption...", ConsoleColor.White, ConsoleColor.DarkYellow);
-                        AddToLog("Attempting Decryption...", ConsoleColor.DarkYellow);
-                        try
-                        {
-                            decryptedASM = EncryptionHelper.DecryptPackedASM(Licensing.GetEncryptedASM(), File.ReadAllText(file), Licensing.GetEncryptedASMIV());
-                            SetStatusText("File Successfully Decrypted...", ConsoleColor.White, ConsoleColor.DarkGreen);
-                            AddToLog("Packed Assembly Successfully Decrypted!", ConsoleColor.Green);
-                            AddToLog("  └ Decryption Key: '" + File.ReadAllText(file) + "'", ConsoleColor.DarkMagenta);
-                            AddToLog("");
-                        }
-                        catch { AddToLog("Failed to decrypt Packed Assembly!", ConsoleColor.Red); SetStatusText("Decryption Failed!", ConsoleColor.White, ConsoleColor.DarkRed); Console.ReadKey(); Application.Exit(); }
-                        break;
-                }
-                if (decryptedASM != null)
-                {
-                    SetStatusText("Saving File...", ConsoleColor.White, ConsoleColor.DarkYellow);
-                    AddToLog("Saving Decrypted ASM...", ConsoleColor.Yellow);
-                    File.WriteAllBytes(Path.GetFileNameWithoutExtension(path) + "_UniSheild-ExtractedASM.exe", Convert.FromBase64String(Encoding.Default.GetString(decryptedASM)));
-                    AddToLog("Decrypted ASM Saved! (Saved as: " + '"' + Path.GetFileName(path) + "_UniSheild-ExtractedASM.exe" + '"', ConsoleColor.Green);
-                }
-            }
+            if (Licensing.GetLicensingType() != "???") { Licensing.Fix(); }
             else
             {
                 AddToLog("Application not Packed!", ConsoleColor.Green);
@@ -191,7 +86,7 @@ namespace UniShield
                 //AddToLog("Now Renaming Methods...", ConsoleColor.Yellow);
                 //Renaming.Fix();
                 if (config.Prot_ILDasm) { AddToLog("Now Removing ILDasm...", ConsoleColor.Yellow); ILDasm.Fix(); AddToLog(""); }
-                if (config.Prot_Calli) { AddToLog("Now Callis...", ConsoleColor.Yellow); Calli.Fix(); AddLogSeparator(); }
+                if (config.Prot_Calli) { AddToLog("Now Callis...", ConsoleColor.Yellow); Calli.Fix(); AddToLog(""); }
                 if (config.Prot_Base64Strings) { AddToLog("Now Decoding Base64 Strings...", ConsoleColor.Yellow); Base64.Fix(); AddToLog(""); }
                 if (config.Prot_AntiDe4Dots) { AddToLog("Now Removing AntiDe4Dots...", ConsoleColor.Yellow); AntiDe4dot.Fix(); AddToLog(""); }
                 if (config.Prot_FakeAtrribs) { AddToLog("Now Removing Fake Attributes...", ConsoleColor.Yellow); FakeAttribs.Fix(); AddToLog(""); }
@@ -291,7 +186,7 @@ namespace UniShield
             Console.SetCursorPosition(0, 0);
         }
 
-        static void DrawAbout()
+        public static void DrawAbout()
         {
             if (config.MinimalLayout) { return; }
             Console.SetCursorPosition(0, 0);
@@ -306,12 +201,12 @@ namespace UniShield
             Console.CursorLeft = 0;
             Console.WriteLine(" - UniShield");
             Console.Write("    └ ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine("https://github.com/miso-xyz/UniShield");
             Console.ResetColor();
             Console.Write("    └ Version: ");
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.Magenta;
+            Console.BackgroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine(" v" + Updater.CurrentVersion + " ");
             Console.ResetColor();
             Console.WriteLine();
@@ -401,6 +296,7 @@ namespace UniShield
 
         public static bool DrawUpdateDialog(Updater updaterClass)
         {
+            Console.Clear();
             Console.WindowWidth = 120; Console.WindowHeight = 18; Console.BufferHeight = 18;
             int buttonSelected = 1;
             while (true)

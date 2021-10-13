@@ -57,8 +57,12 @@ namespace UniShield.Protections
                                 count++;
                                 inst.Operand = dec;
                             }
-                            if (method.Body.Instructions[x + 1].OpCode.Equals(OpCodes.Call) && method.Body.Instructions[x + 2].OpCode.Equals(OpCodes.Callvirt)) { method.Body.Instructions.RemoveAt(x + 1); method.Body.Instructions.RemoveAt(x + 1); }
-                            if (Utils.isFullMethod(method.Body.Instructions[x - 1].Operand, Program.preset.Encoding_GetUTF8)) { method.Body.Instructions.RemoveAt(x - 1); x--; }
+                            try
+                            {
+                                if (method.Body.Instructions[x + 1].OpCode.Equals(OpCodes.Call) && method.Body.Instructions[x + 2].OpCode.Equals(OpCodes.Callvirt)) { method.Body.Instructions.RemoveAt(x + 1); method.Body.Instructions.RemoveAt(x + 1); }
+                                if (method.Body.Instructions[x - 1].OpCode.Equals(OpCodes.Call)) { if (Utils.isFullMethod(method.Body.Instructions[x - 1].Operand, Program.preset.Encoding_GetUTF8)) { method.Body.Instructions.RemoveAt(x - 1); x--; } }
+                            }
+                            catch { }
                         }
                     }
                 }

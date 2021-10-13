@@ -49,7 +49,7 @@ namespace UniShield
 
         public const string
             CurrentAppName = "UniShield",
-            CurrentVersion = "1.1",
+            CurrentVersion = "1.2.1",
             RepoLink = "https://github.com/miso-xyz/UniShield",
             UpdateLogLink = "https://raw.githubusercontent.com/miso-xyz/UniShield/main/latest.info";
 
