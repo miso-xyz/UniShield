@@ -7,8 +7,8 @@ SHA256_Checksum		= 386F7AE67B269D1B84EA57D6B606969922FDBDD73CFB4EA8394D8A8C30510
 UpdateSize		= 735kb
 
 [CHANGELOG]
+<FG=Cyan>
+- Added In-app Updater
 <FG=Green>
 - Improved Base64 String Cleanup
 - Added Support for Calli Instructions
-<FG=Cyan>
-- Added In-app Updater
