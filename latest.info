@@ -1,7 +1,7 @@
 ## This file contains update information for UniShield
 
 AppName			= UniShield
-Version			= 1.3
+Version			= 1.2
 DownloadLink		= https://github.com/miso-xyz/UniShield/releases/download/v1.1/UniShield.zip
 SHA256_Checksum		= FC94FEE5FAC68E99182C77C336C863D8304B3C944290361D95D9674072E39430
 UpdateSize		= 448kb
