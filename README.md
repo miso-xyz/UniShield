@@ -27,6 +27,10 @@ CFlow | Well Supported for NetShield Protector v1.0, needs support for randomise
 
 # Screenshots
 <details>
+ <summary>v1.2.1</summary>
+ <img src="https://i.imgur.com/cuLsIBw.png">
+</details>
+<details>
  <summary>v1.2</summary>
  <img src="https://i.imgur.com/9OQhnAD.png">
  <img src="https://i.imgur.com/vKNf1Y0.png">
@@ -48,6 +52,11 @@ CFlow | Well Supported for NetShield Protector v1.0, needs support for randomise
 -->
 
 # Changelog
+<details>
+ <summary>v1.2.1</summary>
+ <pre>- Fixed Stability Issue in Base64 Cleanup
+- Added Support for New Licensing Packing</pre>
+</details>
 <details>
  <summary>v1.2</summary>
  <pre>- Improved Base64 String Cleanup
@@ -132,6 +141,20 @@ CFlow			= 1
 IntConfusion		= 1</pre>
 </details>
 <hr>
+<details>
+  <summary>Default Preset File (preset.txt) - v1.2.1</summary>
+  <pre>[TextEncoding]
+Encoding_GetUTF8		= System.Text,Encoding,get_UTF8
+Encoding_GetAscii		= System.Text,Encoding,get_ASCII
+Encoding_GetBytes		= System.Text,Encoding,GetBytes
+[Cryptography]
+DecodeBase64String		= System,Convert,FromBase64String
+SymmetricAlgorithm_Decryptor	= System.Security.Cryptography,SymmetricAlgorithm,CreateDecryptor
+HMACSHA256_HashGen		= System.Security.Cryptography,HMACSHA256
+SHA256_CryptoService		= System.Security.Cryptography,SHA256CryptoServiceProvider
+[ILDasm]
+SupressIldasmAttribute		= System.Runtime.CompilerServices,SuppressIldasmAttribute</pre>
+</details>
 <details>
   <summary>Default Preset File (preset.txt) - v1.2</summary>
   <pre>[TextEncoding]
