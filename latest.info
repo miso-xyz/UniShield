@@ -1,14 +1,13 @@
 ## This file contains update information for UniShield
 
 AppName			= UniShield
-Version			= 1.2
-DownloadLink		= https://github.com/miso-xyz/UniShield/releases/download/v1.2/UniShield.zip
-SHA256_Checksum		= 386F7AE67B269D1B84EA57D6B606969922FDBDD73CFB4EA8394D8A8C30510F84
+Version			= 1.2.1
+DownloadLink		= https://github.com/miso-xyz/UniShield/releases/download/v1.2.1/UniShield.zip
+SHA256_Checksum		= D41D1D81C19E7E86F41C800DEB7E3972ECE11460C48DA6A486A9FF4BA08F65FF
 UpdateSize		= 735kb
 
 [CHANGELOG]
 <FG=Cyan>
-- Added In-app Updater
+- Added Support for New Licensing Packing
 <FG=Green>
-- Improved Base64 String Cleanup
-- Added Support for Calli Instructions
+- Fixed Stability Issue in Base64 Cleanup
