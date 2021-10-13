@@ -178,3 +178,4 @@ SupressIldasmAttribute		= System.Runtime.CompilerServices,SuppressIldasmAttribut
 - <a href="https://github.com/DevT02/">DevT02</a> - <a href="https://github.com/DevT02/Junk-Remover">Junk Remover</a> (Useless NOP Remover)
 - <a href="https://github.com/0xd4d/dnlib">wtfsck/0xd4d</a> - <a href="https://github.com/0xd4d/dnlib">dnlib</a>
 - <a href="https://github.com/AhmedMinegames/">AhmedMinegames</a> - <a href="https://github.com/AhmedMinegames/NetShield_Protector">NetShield Protector</a>
+- Igor Pavlov - <a href="https://www.7-zip.org/">7-Zip</a>
