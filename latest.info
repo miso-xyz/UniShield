@@ -4,6 +4,7 @@ AppName			= UniShield
 Version			= 1.2
 DownloadLink		= https://github.com/miso-xyz/UniShield/releases/download/v1.1/UniShield.zip
 SHA256_Checksum		= fc94fee5fac68e99182c77c336c863d8304b3c944290361d95d9674072e39430
+UpdateSize		= 448kb
 
 [CHANGELOG]
 <FG=Black,BG=Cyan>
