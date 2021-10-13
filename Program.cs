@@ -306,12 +306,12 @@ namespace UniShield
             Console.CursorLeft = 0;
             Console.WriteLine(" - UniShield");
             Console.Write("    └ ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("https://github.com/miso-xyz/UniShield");
             Console.ResetColor();
             Console.Write("    └ Version: ");
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.BackgroundColor = ConsoleColor.Magenta;
             Console.WriteLine(" v" + Updater.CurrentVersion + " ");
             Console.ResetColor();
             Console.WriteLine();
