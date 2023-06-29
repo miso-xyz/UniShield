@@ -2,6 +2,8 @@
 Deobfuscator for <a href="https://github.com/AhmedMinegames/NetShield_Protector">NetShield Protector</a>
 
 # Notes
+**This tool does not have anything to do with DNGuard, if you want to send me a message, make sure your sample was obfuscated with the obfuscator linked above.**
+
 All 3 Licensing Protections use encryption, UniShield only extract the encrypted data & tries to decrypt with what's available.</br>(they're stupid protections anyway)</br>
 
 Some protections that NetShield Uses are from <a href="https://github.com/Sato-Isolated/MindLated/">MindLated</a>.</br>
